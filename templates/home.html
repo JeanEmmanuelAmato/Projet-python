@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<!-- <link rel="stylesheet" type="text/css" href="../static/css/styles.css"> -->
+   <!--<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+   
+   
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='w3.css') }}">
+	<meta http-equiv="viewport" content="width=device-width" />
+	
+	
+	<!--<link rel="stylesheet" type="text/css" href="w3.css" />-->
+	
+</head>
+<body>
+
+	<header>
+		<div class="container">
+		<h1>Drugs consumption prediction</h1>
+		
+	</div>
+	</header>
+
+	<div class="ml-container w3-container">
+
+		<form id="forme-data" class="w3-card" action="{{ url_for('predict')}}" method="POST">
+		<h3 class="w3-panel w3-blue">Please enter the data in the following boxes.</h3>
+      
+		   
+		<!--   Tranche_age;Genre;Niveau_Education;Nscore;Escore;Oscore;Ascore;Cscore;Impulsive;SS<br><br>-->
+   
+		<!-- <input type="text" name="comment"/> -->
+		<div class="w3-container">
+		   <ul class="w3-ul" id="content-data" /></ul>
+		   <input class="w3-btn w3-blue w3-block w3-margin-bottom" type="submit" class="btn-info" value="predict">
+		</div>
+      
+		<input name="message" id="data" type="hidden">
+		
+	</form>
+			<footer>
+	   <div style="margin-top:10px; text-align:center" id="brandname w3-margin">
+			Machine Learning App with Flask
+		</div>
+	</footer>
+	</div>
+	
+
+   <script type="text/javascript" charset="utf-8">
+      const data = [
+         {type: 'number', label: 'Tranche age', max: 5, },
+         {type: 'select', label: 'Genre', options:['Male', 'Female'] },
+         {type: 'number', label: 'Niveau Education', max: 8 },
+         {type: 'number', label: 'Nscore', max: 48 },
+         {type: 'number', label: 'Escore', max: 41 },
+         {type: 'number', label: 'Oscore', max: 34 },
+         {type: 'number', label: 'Ascore', max: 40 },
+         {type: 'number', label: 'Cscore', max: 40 },
+         {type: 'number', label: 'Impulsive', max: 9 },
+         {type: 'number', label: 'SS', max: 10 }
+         ];
+      const form = document.getElementById('forme-data');
+      const contentData = document.getElementById('content-data');
+      
+      function handleKeyBoard(event) {
+         const max = parseInt(event.target.max);
+         const min = parseInt(event.target.min);
+         const value = parseInt(event.target.value);
+         if(isNaN(value)) event.target.value = 0;
+         else if( !(value >= 0 && value <= max) ) {
+            event.preventDefault();
+            alert('value error \nmax value: '+ max + ' and  min value: '+ min);                                                               
+            event.target.value = parseInt( String(value).split('').filter((e,i,t)=> i !== (t.length -1) && e ).join('') );
+         }
+         else event.target.value = parseInt(event.target.value);
+      }
+      
+      function handleChange(event) {
+        const option = event.target.options[event.target.selectedIndex];
+        event.target.value = option.value;
+        
+      }
+      
+      
+      data.forEach((elem, index) => {
+         
+         const id = 'input-id-' + index;
+         const block = document.createElement('li');
+         const subBlockInput = document.createElement('div');
+         const subBlockLabel = document.createElement('div');
+         const label = document.createElement('label');
+         
+         label.innerText = elem.label +  (elem.max ? `; value min : 0 and value max ${elem.max} ` : '');
+         
+         label.htmlFor = id;
+         
+         subBlockLabel.className = 'w3-col s8';
+         
+         subBlockLabel.appendChild(label)
+         block.appendChild(subBlockLabel);
+         block.appendChild(subBlockInput);
+         block.className = 'w3-row';
+         subBlockInput.className = 'w3-col s4';
+         contentData.appendChild(block);
+         
+         if(elem.type == 'number') {
+            const input = document.createElement('input');
+         
+            input.className = 'w3-input input-datas';
+            input.type = elem.type;
+            input.max = elem.max;
+            input.min = 0;
+            input.step = 1;
+            input.value = 0;
+            input.placeholder = 'max value:'+elem.max
+            input.id = id;
+            input.onkeyup = handleKeyBoard;
+            
+            subBlockInput.appendChild(input);
+
+         }
+         
+         if(elem.type == 'select') {
+            const select = document.createElement('select');
+            const mss = document.createElement('option');
+            mss.disabled = true;
+            mss.innerText = 'Select the gender';
+            mss.selected = true;
+            mss.value = null;
+            
+            select.className = 'w3-select input-datas';
+            select.appendChild(mss);
+            select.onchange = handleChange;
+            subBlockInput.appendChild(select);
+      
+            elem.options.forEach((op, i) => {
+               const elemOptiopn = document.createElement('option');
+               elemOptiopn.value = op;
+               elemOptiopn.innerText = op;
+               select.appendChild(elemOptiopn);
+            });
+            
+         }
+         
+         
+      });
+      
+      
+      form.onsubmit = (event) => {
+         
+         event.preventDefault();
+         
+         inputDatas = document.getElementById('data');
+         let nbr = 0;
+         
+         const datas = [...document.getElementsByClassName('input-datas')].map((elem, index) => {
+            const max = parseInt(elem.max);
+            const min = parseInt(elem.min);
+            const value = parseInt(elem.value);
+            
+            
+            if(max && (value >= 0 && value <= max)) nbr += 1;
+            
+            if(elem.value === 'null') alert('Gender error');
+            
+            if(isNaN(value))
+               if(elem.value !== 'null') nbr += 1;
+            return isNaN(value) ? elem.value : value;
+            
+         }).join(';');
+         
+         
+         if(nbr === 10) {
+            inputDatas.value = datas;
+            form.submit();
+         }
+         
+         
+      }
+   </script>
+	
+	
+
+</body>
+</html>

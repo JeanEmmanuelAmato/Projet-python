@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='w3.css') }}">
+	<meta http-equiv="viewport" content="width=device-width" />
+</head>
+<body class="w3-container">
+
+	<header>
+		<div class="container">
+		
+		<h2 style="text-align: center;">Drugs consumption prediction</h2>
+		
+	</div>
+	</header>
+	
+	<div class="w3-container w3-card">
+	<h1 style="text-align: center;" class="w3-text-blue">Results</h1>
+
+		
+	{% if prediction == 1%}
+	<h2 class="w3-panel w3-red">Potential heroin user</h2>
+	{% elif prediction == 0%}
+	<h2 class="w3-panel w3-blue">Non potential heroin user</h2>
+	{% endif %}
+	
+	{% if prediction2 == 1%}
+	<h2 class="w3-panel w3-red">Potential ecstasy user</h2>
+	{% elif prediction2 == 0%}
+	<h2 class="w3-panel w3-blue">Non potential ecstasy user</h2>
+	{% endif %}
+	
+	{% if prediction3 == 1%}
+	<h2 class="w3-panel w3-red">Potential benzo user</h2>
+	{% elif prediction3 == 0%}
+	<h2 class="w3-panel w3-blue">Non potential benzo user</h2>
+	{% endif %}
+
+	</div>
+<footer style="margin-top: 10px; text-align: center;">
+	<div id="brandname">
+			ML App
+		</div>
+</footer>
+</body>
+</html>
