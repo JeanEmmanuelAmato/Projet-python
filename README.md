@@ -1,7 +1,7 @@
 # Projet-python
 Un projet de DataScience qui traite de la consommation de drogue
 
-# But du projet
+# Résumé du projet
 Sur la base d'un dataset contenant des informations sur des individus, le but était de prédire la consommation de certaines drogues. 
 
 Beaucoup de choix ont été appliqués lors de cette étude, et nous avons au mieux essayé de comprendre nos données, aux travers de graphiques et de documents.
